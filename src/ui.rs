@@ -49,8 +49,7 @@ fn draw_header(frame: &mut Frame, area: Rect) {
 
 fn draw_launcher_list(frame: &mut Frame, area: Rect, app: &App) {
     let list_items: Vec<ListItem> = app
-        .items
-        .iter()
+        .visible_items()
         .map(|item| {
             let favorite = if item.is_favorite { "[fav] " } else { "" };
             ListItem::new(Line::from(vec![
@@ -73,8 +72,19 @@ fn draw_launcher_list(frame: &mut Frame, area: Rect, app: &App) {
         })
         .collect();
 
+    let title = if app.search_query.is_empty() {
+        "Launchers".to_string()
+    } else {
+        format!(
+            "Launchers matching \"{}\" ({}/{})",
+            app.search_query,
+            app.visible_items.len(),
+            app.items.len()
+        )
+    };
+
     let list = List::new(list_items)
-        .block(Block::default().title("Launchers").borders(Borders::ALL))
+        .block(Block::default().title(title).borders(Borders::ALL))
         .highlight_style(
             Style::default()
                 .fg(Color::Black)
@@ -84,7 +94,7 @@ fn draw_launcher_list(frame: &mut Frame, area: Rect, app: &App) {
         .highlight_symbol(" > ");
 
     let mut state = ListState::default();
-    if !app.items.is_empty() {
+    if !app.visible_items.is_empty() {
         state.select(Some(app.selected));
     }
     frame.render_stateful_widget(list, area, &mut state);
@@ -92,13 +102,13 @@ fn draw_launcher_list(frame: &mut Frame, area: Rect, app: &App) {
 
 fn draw_detail_panel(frame: &mut Frame, area: Rect, app: &App) {
     match &app.mode {
-        AppMode::Normal => draw_selected_item(frame, area, app),
+        AppMode::Normal | AppMode::Searching => draw_selected_item(frame, area, app),
         AppMode::Adding(form) => draw_add_form(frame, area, form),
     }
 }
 
 fn draw_selected_item(frame: &mut Frame, area: Rect, app: &App) {
-    let details = if let Some(selected) = app.items.get(app.selected) {
+    let details = if let Some(selected) = app.selected_item() {
         vec![
             Line::from(vec![
                 Span::styled("Name: ", Style::default().add_modifier(Modifier::BOLD)),
@@ -124,10 +134,22 @@ fn draw_selected_item(frame: &mut Frame, area: Rect, app: &App) {
         ]
     } else {
         vec![
-            Line::from("No launchers found yet."),
+            Line::from(if app.search_query.is_empty() {
+                "No launchers found yet."
+            } else {
+                "No launchers match this search."
+            }),
             Line::from(""),
-            Line::from("Press a to add one. The launcher will save it to:"),
-            Line::from(config_file_path().display().to_string()),
+            if app.search_query.is_empty() {
+                Line::from("Press a to add one. The launcher will save it to:")
+            } else {
+                Line::from("Press Esc to clear the search.")
+            },
+            if app.search_query.is_empty() {
+                Line::from(config_file_path().display().to_string())
+            } else {
+                Line::from("")
+            },
         ]
     };
 
@@ -186,7 +208,9 @@ fn draw_add_form(frame: &mut Frame, area: Rect, form: &AddForm) {
 fn draw_footer(frame: &mut Frame, area: Rect, app: &App) {
     let help = match app.mode {
         AppMode::Normal => Line::from(vec![
-            Span::styled("j/down", Style::default().fg(Color::Yellow)),
+            Span::styled("/", Style::default().fg(Color::Yellow)),
+            Span::raw(" search  "),
+            Span::styled("down", Style::default().fg(Color::Yellow)),
             Span::raw(" move  "),
             Span::styled("enter", Style::default().fg(Color::Yellow)),
             Span::raw(" launch  "),
@@ -198,6 +222,18 @@ fn draw_footer(frame: &mut Frame, area: Rect, app: &App) {
             Span::raw(" rescan  "),
             Span::styled("q/esc", Style::default().fg(Color::Yellow)),
             Span::raw(" quit"),
+        ]),
+        AppMode::Searching => Line::from(vec![
+            Span::styled("type", Style::default().fg(Color::Yellow)),
+            Span::raw(" filter  "),
+            Span::styled("backspace", Style::default().fg(Color::Yellow)),
+            Span::raw(" delete  "),
+            Span::styled("j/down", Style::default().fg(Color::Yellow)),
+            Span::raw(" move  "),
+            Span::styled("enter", Style::default().fg(Color::Yellow)),
+            Span::raw(" launch  "),
+            Span::styled("esc", Style::default().fg(Color::Yellow)),
+            Span::raw(" clear"),
         ]),
         AppMode::Adding(_) => Line::from(vec![
             Span::styled("enter", Style::default().fg(Color::Yellow)),

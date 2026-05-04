@@ -12,6 +12,7 @@ cargo run
 
 | Key | Action |
 | --- | --- |
+| `/` | Search launchers |
 | `j` / Down | Move down |
 | `k` / Up | Move up |
 | Enter | Launch selected TUI |
@@ -19,6 +20,9 @@ cargo run
 | `f` | Favorite or unfavorite selected launcher |
 | `r` | Rescan detected and saved launchers |
 | `q` / Esc | Quit |
+
+Search mode fuzzy-matches launcher names, commands, and descriptions. Press
+Backspace to edit the search and Esc to clear it.
 
 ## How Launchers Are Chosen
 
