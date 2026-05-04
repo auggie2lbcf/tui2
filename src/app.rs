@@ -90,8 +90,8 @@ impl App {
                 self.rebuild_visible_items(None);
                 self.update_search_status();
             }
-            KeyCode::Char('j') | KeyCode::Down => self.select_next(),
-            KeyCode::Char('k') | KeyCode::Up => self.select_previous(),
+            KeyCode::Down => self.select_next(),
+            KeyCode::Up => self.select_previous(),
             KeyCode::Char(character) => {
                 self.search_query.push(character);
                 self.rebuild_visible_items(None);
