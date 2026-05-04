@@ -4,8 +4,8 @@ version = "0.1.2"
 edition = "2024"
 authors = ["Austin"]
 description = "A terminal UI launcher for terminal UI apps"
-repository = "https://github.com/therobustroast/tui2"
-homepage = "https://github.com/therobustroast/tui2"
+repository = "https://github.com/auggie2lbcf/tui2"
+homepage = "https://github.com/auggie2lbcf/tui2"
 license = "MIT"
 readme = "README.md"
 
