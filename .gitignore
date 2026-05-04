@@ -1,0 +1,16 @@
+# Rust build output
+/target/
+
+# Local editor and OS files
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Local environment files
+.env
+.env.*
+
+# Runtime logs
+*.log
