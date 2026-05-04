@@ -436,7 +436,7 @@ dependencies = [
 
 [[package]]
 name = "tui2"
-version = "0.1.3"
+version = "0.1.4"
 dependencies = [
  "crossterm",
  "ratatui",

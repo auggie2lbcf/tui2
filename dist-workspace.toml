@@ -7,6 +7,8 @@ members = ["cargo:."]
 cargo-dist-version = "0.31.0"
 # CI backends to support
 ci = "github"
+# Generated CI is intentionally patched to use npm Trusted Publishing (OIDC).
+allow-dirty = ["ci"]
 # The installers to generate for each app
 installers = ["shell", "powershell", "npm", "homebrew"]
 # A namespace to use when publishing this package to the npm registry
