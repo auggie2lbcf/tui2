@@ -302,7 +302,10 @@ jobs:
       - run: |
           for release in $(echo "$PLAN" | jq --compact-output '.releases[] | select([.artifacts[] | endswith("-npm-package.tar.gz")] | any)'); do
             pkg=$(echo "$release" | jq '.artifacts[] | select(endswith("-npm-package.tar.gz"))' --raw-output)
-            npm publish --access public "./npm/${pkg}"
+            package_dir="$(mktemp -d)"
+            tar -xzf "./npm/${pkg}" -C "$package_dir"
+            chmod 755 "$package_dir"/package/run-*.js
+            npm publish --access public "$package_dir/package"
           done
 
   announce:
