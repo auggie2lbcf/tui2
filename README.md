@@ -1,4 +1,4 @@
-# tui2
+# tui²
 
 `tui2` is a terminal UI launcher for other terminal UI apps. It detects common TUIs installed on your computer, lets you add your own commands, and prioritizes favorites and frequently used tools.
 
