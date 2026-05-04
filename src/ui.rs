@@ -228,7 +228,7 @@ fn draw_footer(frame: &mut Frame, area: Rect, app: &App) {
             Span::raw(" filter  "),
             Span::styled("backspace", Style::default().fg(Color::Yellow)),
             Span::raw(" delete  "),
-            Span::styled("j/down", Style::default().fg(Color::Yellow)),
+            Span::styled("down", Style::default().fg(Color::Yellow)),
             Span::raw(" move  "),
             Span::styled("enter", Style::default().fg(Color::Yellow)),
             Span::raw(" launch  "),
