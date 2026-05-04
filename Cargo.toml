@@ -2,7 +2,24 @@
 name = "tui2"
 version = "0.1.0"
 edition = "2024"
+authors = ["Austin"]
+description = "A terminal UI launcher for terminal UI apps"
+repository = "https://github.com/therobustroast/tui2"
+homepage = "https://github.com/therobustroast/tui2"
+license = "MIT"
+readme = "README.md"
+
+[package.metadata.wix]
+upgrade-guid = "5FBC64F6-0AE3-423A-9A21-7CFB9B547297"
+path-guid = "49E44DC3-C4D2-4A52-B9C6-34757DA09DBE"
+license = false
+eula = false
 
 [dependencies]
 crossterm = "0.28"
 ratatui = "0.29"
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
